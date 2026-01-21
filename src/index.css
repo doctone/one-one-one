@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Crimson Pro", serif;
+  --font-sans: "Outfit", sans-serif;
+
+  --color-sage-50: #f4f7f4;
+  --color-sage-100: #e3ebe3;
+  --color-sage-200: #c5d8c5;
+  --color-sage-300: #9cb99c;
+  --color-sage-400: #769876;
+  --color-sage-500: #567a56;
+  --color-sage-600: #436043;
+
+  --color-sand-50: #fbf9f6;
+  --color-sand-100: #f5f0e8;
+  --color-sand-200: #ebe0cf;
+  --color-sand-300: #decba1;
+  --color-sand-400: #ccb088;
+  --color-sand-500: #b8956e;
+
+  --color-clay-50: #fdf8f6;
+  --color-clay-100: #fbeee9;
+  --color-clay-200: #f6dcd4;
+  --color-clay-300: #efbfb3;
+  --color-clay-400: #e59b8a;
+  --color-clay-500: #d97660;
+}
+
+@layer base {
+  body {
+    @apply bg-sand-50 text-gray-800 antialiased font-sans;
+  }
+}
