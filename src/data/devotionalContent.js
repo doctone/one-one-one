@@ -2,6 +2,7 @@ export const devotionalContent = [
     {
         id: 1,
         chapter: 1,
+        verse: 15,
         verseText: "The time has come. The kingdom of God has come near. Repent and believe the good news!",
         verseRef: "Mark 1:15",
         question: "What is the best news you've ever heard?",
@@ -10,6 +11,7 @@ export const devotionalContent = [
     {
         id: 2,
         chapter: 2,
+        verse: 5,
         verseText: "Son, your sins are forgiven.",
         verseRef: "Mark 2:5",
         question: "How does it feel when someone forgives you for something you did wrong?",
@@ -18,6 +20,7 @@ export const devotionalContent = [
     {
         id: 3,
         chapter: 3,
+        verse: 35,
         verseText: "Whoever does God's will is my brother and sister and mother.",
         verseRef: "Mark 3:35",
         question: "What does it mean to be part of God's family?",
@@ -26,6 +29,7 @@ export const devotionalContent = [
     {
         id: 4,
         chapter: 4,
+        verse: 41,
         verseText: "Who is this? Even the wind and the waves obey him!",
         verseRef: "Mark 4:41",
         question: "What is something big or scary that Jesus can help you with?",
@@ -34,6 +38,7 @@ export const devotionalContent = [
     {
         id: 5,
         chapter: 5,
+        verse: 36,
         verseText: "Don't be afraid; just believe.",
         verseRef: "Mark 5:36",
         question: "Is there something you are worried about today that you can trust Jesus with?",
@@ -42,6 +47,7 @@ export const devotionalContent = [
     {
         id: 6,
         chapter: 6,
+        verse: 50,
         verseText: "Take courage! It is I. Don't be afraid.",
         verseRef: "Mark 6:50",
         question: "Imagine seeing Jesus walking on water. What would you say to him?",
@@ -50,6 +56,7 @@ export const devotionalContent = [
     {
         id: 7,
         chapter: 7,
+        verse: 37,
         verseText: "He has done everything well. He even makes the deaf hear and the mute speak.",
         verseRef: "Mark 7:37",
         question: "What is one good thing you have seen God do in your life or the world?",
@@ -58,6 +65,7 @@ export const devotionalContent = [
     {
         id: 8,
         chapter: 8,
+        verse: 29,
         verseText: "Who do you say I am?",
         verseRef: "Mark 8:29",
         question: "If someone asked you who Jesus is, what would you tell them?",
@@ -66,6 +74,7 @@ export const devotionalContent = [
     {
         id: 9,
         chapter: 9,
+        verse: 23,
         verseText: "Everything is possible for one who believes.",
         verseRef: "Mark 9:23",
         question: "Is there something really hard that you need God's help with?",
@@ -74,6 +83,7 @@ export const devotionalContent = [
     {
         id: 10,
         chapter: 10,
+        verse: 14,
         verseText: "Let the little children come to me, and do not hinder them, for the kingdom of God belongs to such as these.",
         verseRef: "Mark 10:14",
         question: "How does it make you feel to know that Jesus wants you to come to him?",
@@ -82,6 +92,7 @@ export const devotionalContent = [
     {
         id: 11,
         chapter: 11,
+        verse: 9,
         verseText: "Hosanna! Blessed is he who comes in the name of the Lord!",
         verseRef: "Mark 11:9",
         question: "How can we praise Jesus like the people did on Palm Sunday?",
@@ -90,6 +101,7 @@ export const devotionalContent = [
     {
         id: 12,
         chapter: 12,
+        verse: 30,
         verseText: "Love the Lord your God with all your heart and with all your soul and with all your mind and with all your strength.",
         verseRef: "Mark 12:30",
         question: "What is one way you can show God you love him today?",
@@ -98,6 +110,7 @@ export const devotionalContent = [
     {
         id: 13,
         chapter: 13,
+        verse: 31,
         verseText: "Heaven and earth will pass away, but my words will never pass away.",
         verseRef: "Mark 13:31",
         question: "What is a promise from the Bible that you know is true?",
@@ -106,6 +119,7 @@ export const devotionalContent = [
     {
         id: 14,
         chapter: 14,
+        verse: 36,
         verseText: "Abba, Father, everything is possible for you. Take this cup from me. Yet not what I will, but what you will.",
         verseRef: "Mark 14:36",
         question: "When is it hard to obey what your parents or God ask you to do?",
@@ -114,6 +128,7 @@ export const devotionalContent = [
     {
         id: 15,
         chapter: 15,
+        verse: 39,
         verseText: "Surely this man was the Son of God!",
         verseRef: "Mark 15:39",
         question: "Why is it important that Jesus died on the cross for us?",
@@ -122,6 +137,7 @@ export const devotionalContent = [
     {
         id: 16,
         chapter: 16,
+        verse: 15,
         verseText: "Go into all the world and preach the gospel to all creation.",
         verseRef: "Mark 16:15",
         question: "Who is someone you can tell about Jesus?",

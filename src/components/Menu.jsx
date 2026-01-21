@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { Link } from "@tanstack/react-router";
 import logo from "../assets/logo.png";
+import { devotionalContent } from "../data/devotionalContent";
 
-export function Menu({ currentChapter, onSelectChapter }) {
+export function Menu({ currentChapter }) {
   const [isOpen, setIsOpen] = useState(false);
 
   // Prevent scrolling when menu is open
@@ -12,6 +14,12 @@ export function Menu({ currentChapter, onSelectChapter }) {
       document.body.style.overflow = "unset";
     }
   }, [isOpen]);
+
+  // Helper to find the starting verse for a chapter
+  const getVerseForChapter = (chapterId) => {
+    const entry = devotionalContent.find((d) => d.chapter === chapterId);
+    return entry ? entry.verse : 1;
+  };
 
   return (
     <>
@@ -96,20 +104,22 @@ export function Menu({ currentChapter, onSelectChapter }) {
             </h3>
             <div className="grid grid-cols-4 gap-3">
               {Array.from({ length: 16 }, (_, i) => i + 1).map((chapter) => (
-                <button
+                <Link
                   key={chapter}
-                  onClick={() => {
-                    onSelectChapter(chapter - 1);
-                    setIsOpen(false);
+                  to="/mark/$chapterId/$verseId"
+                  params={{
+                    chapterId: chapter,
+                    verseId: getVerseForChapter(chapter),
                   }}
+                  onClick={() => setIsOpen(false)}
                   className={`aspect-square rounded-xl flex items-center justify-center font-serif text-lg transition-all duration-200 ${
-                    currentChapter + 1 === chapter
+                    currentChapter === chapter
                       ? "bg-sage-500 text-white shadow-md scale-105"
                       : "bg-gray-50 text-gray-600 hover:bg-sage-100 hover:text-sage-700"
                   }`}
                 >
                   {chapter}
-                </button>
+                </Link>
               ))}
             </div>
           </div>

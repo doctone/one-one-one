@@ -4,7 +4,7 @@ import { PrayerSection } from './PrayerSection'
 import { Controls } from './Controls'
 import logo from '../assets/logo.png'
 
-export function Layout({ data, onNext }) {
+export function Layout({ data, nextChapterId, nextVerseId }) {
     return (
         <main className="max-w-2xl mx-auto min-h-screen flex flex-col">
             <header className="p-4 md:p-6 text-center flex flex-col items-center gap-2">
@@ -18,7 +18,7 @@ export function Layout({ data, onNext }) {
                 <PrayerSection prayer={data.prayer} />
             </div>
 
-            <Controls onNext={onNext} />
+            <Controls nextChapterId={nextChapterId} nextVerseId={nextVerseId} />
         </main>
     )
 }
