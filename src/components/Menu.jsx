@@ -3,8 +3,9 @@ import { Link } from "@tanstack/react-router";
 import logo from "../assets/logo.png";
 import { devotionalContent } from "../data/devotionalContent";
 
-export function Menu({ currentChapter }) {
+export function Menu({ currentChapter, currentVerse }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedChapter, setSelectedChapter] = useState(currentChapter || 1);
 
   // Prevent scrolling when menu is open
   useEffect(() => {
@@ -15,11 +16,18 @@ export function Menu({ currentChapter }) {
     }
   }, [isOpen]);
 
-  // Helper to find the starting verse for a chapter
-  const getVerseForChapter = (chapterId) => {
-    const entry = devotionalContent.find((d) => d.chapter === chapterId);
-    return entry ? entry.verse : 1;
-  };
+  // Update selected chapter when current chapter changes
+  useEffect(() => {
+    if (currentChapter) {
+      setSelectedChapter(currentChapter);
+    }
+  }, [currentChapter]);
+
+  // Get all unique chapters
+  const chapters = [...new Set(devotionalContent.map(d => d.chapter))].sort((a, b) => a - b);
+
+  // Get verses for the selected chapter
+  const versesInChapter = devotionalContent.filter(d => d.chapter === selectedChapter);
 
   return (
     <>
@@ -46,17 +54,15 @@ export function Menu({ currentChapter }) {
 
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-30 transition-opacity duration-300 ${
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 bg-black/50 z-30 transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
         onClick={() => setIsOpen(false)}
       />
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 left-0 bottom-0 w-80 bg-white z-40 shadow-2xl transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 bottom-0 w-80 bg-white z-40 shadow-2xl transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="h-full flex flex-col p-6 overflow-y-auto">
           <div className="flex justify-between items-center mb-8">
@@ -84,44 +90,69 @@ export function Menu({ currentChapter }) {
             </button>
           </div>
 
-          <div className="mb-8">
-            <h3 className="font-sans text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
-              Book
-            </h3>
-            <div className="bg-sage-50 p-4 rounded-xl border border-sage-200">
-              <span className="font-serif text-lg text-sage-800 block">
-                Mark
-              </span>
-            </div>
-            <p className="text-xs text-gray-400 mt-2 px-1">
-              More books coming soon...
-            </p>
-          </div>
-
-          <div>
+          <div className="mb-6">
             <h3 className="font-sans text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
               Chapter
             </h3>
-            <div className="grid grid-cols-4 gap-3">
-              {Array.from({ length: 16 }, (_, i) => i + 1).map((chapter) => (
-                <Link
+            <div className="grid grid-cols-4 gap-2">
+              {chapters.map((chapter) => (
+                <button
                   key={chapter}
-                  to="/mark/$chapterId/$verseId"
-                  params={{
-                    chapterId: chapter,
-                    verseId: getVerseForChapter(chapter),
-                  }}
-                  onClick={() => setIsOpen(false)}
-                  className={`aspect-square rounded-xl flex items-center justify-center font-serif text-lg transition-all duration-200 ${
-                    currentChapter === chapter
-                      ? "bg-sage-500 text-white shadow-md scale-105"
-                      : "bg-gray-50 text-gray-600 hover:bg-sage-100 hover:text-sage-700"
-                  }`}
+                  onClick={() => setSelectedChapter(chapter)}
+                  className={`aspect-square rounded-xl flex items-center justify-center font-serif text-lg transition-all duration-200 ${selectedChapter === chapter
+                    ? "bg-sage-500 text-white shadow-md scale-105"
+                    : "bg-gray-50 text-gray-600 hover:bg-sage-100 hover:text-sage-700"
+                    }`}
                 >
                   {chapter}
-                </Link>
+                </button>
               ))}
             </div>
+          </div>
+
+          <div className="flex-1">
+            <h3 className="font-sans text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+              Verses in Chapter {selectedChapter}
+            </h3>
+            {versesInChapter.length > 0 ? (
+              <div className="flex flex-col gap-3">
+                {versesInChapter.map((devotional) => {
+                  const isActive = currentChapter === devotional.chapter && currentVerse === devotional.verse;
+
+                  return (
+                    <Link
+                      key={devotional.id}
+                      to="/mark/$chapterId/$verseId"
+                      params={{
+                        chapterId: devotional.chapter,
+                        verseId: devotional.verse,
+                      }}
+                      onClick={() => setIsOpen(false)}
+                      className={`p-4 rounded-xl transition-all duration-200 ${isActive
+                        ? "bg-sage-500 text-white shadow-md"
+                        : "bg-gray-50 text-gray-600 hover:bg-sage-100 hover:text-sage-700"
+                        }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-serif text-sm">
+                            {devotional.verseRef}
+                          </div>
+                        </div>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${isActive ? "bg-white/20" : "bg-sage-100 text-sage-700"
+                          }`}>
+                          {devotional.verse}
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-400 italic">
+                No devotionals available for this chapter yet.
+              </p>
+            )}
           </div>
 
           <div className="mt-auto pt-8 flex flex-col items-center gap-2 opacity-50">

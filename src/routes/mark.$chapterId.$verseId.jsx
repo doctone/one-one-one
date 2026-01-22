@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { Layout } from '../components/Layout'
 import { Menu } from '../components/Menu'
 import { devotionalContent } from '../data/devotionalContent'
@@ -11,7 +11,10 @@ export const Route = createFileRoute('/mark/$chapterId/$verseId')({
 
         const chapterData = devotionalContent.find(d => d.chapter === chapterId && d.verse === verseId)
 
-        if (!chapterData) throw new Error('Content not found')
+        if (!chapterData) {
+            // Redirect to first devotional instead of throwing error
+            throw redirect({ to: '/mark/1/1', replace: true })
+        }
 
         return { chapterData, chapterId, verseId }
     },
@@ -29,7 +32,7 @@ function ChapterVerseComponent() {
 
     return (
         <>
-            <Menu currentChapter={chapterId} />
+            <Menu currentChapter={chapterId} currentVerse={verseId} />
             <Layout
                 data={chapterData}
                 nextChapterId={nextContent.chapter}
