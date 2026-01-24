@@ -13,8 +13,15 @@ export function Layout({ data, nextChapterId, nextVerseId }) {
             </header>
 
             <div className="flex-grow flex flex-col gap-2 pb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <VerseSection text={data.verseText} reference={data.verseRef} />
-                <QuestionSection question={data.question} />
+                <VerseSection
+                    text={data.verseText}
+                    reference={data.verseRef}
+                    extra={data.extraVerse}
+                />
+                <QuestionSection
+                    question={data.question}
+                    extra={data.extraQuestion}
+                />
                 <PrayerSection prayer={data.prayer} />
             </div>
 
