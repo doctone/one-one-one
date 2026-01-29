@@ -1,10 +1,20 @@
+import { useEffect } from 'react'
 import { VerseSection } from './VerseSection'
 import { QuestionSection } from './QuestionSection'
 import { PrayerSection } from './PrayerSection'
 import { Controls } from './Controls'
+import { WeeklyProgress } from './WeeklyProgress'
+import { useWeeklyProgress } from '../hooks/useWeeklyProgress'
 import logo from '../assets/logo.jpg'
 
 export function Layout({ data, nextChapterId, nextVerseId }) {
+    const { completed, markToday } = useWeeklyProgress();
+
+    // Mark today as complete when viewing a devotional
+    useEffect(() => {
+        markToday();
+    }, [markToday]);
+
     return (
         <main className="max-w-2xl mx-auto min-h-screen flex flex-col">
             <header className="p-8 md:p-10 text-center flex flex-col items-center gap-4">
@@ -16,6 +26,7 @@ export function Layout({ data, nextChapterId, nextVerseId }) {
                     />
                 </div>
                 <h1 className="font-serif text-xl text-gray-400 italic">One One One</h1>
+                <WeeklyProgress completed={completed} />
             </header>
 
             <div className="flex-grow flex flex-col gap-2 pb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
