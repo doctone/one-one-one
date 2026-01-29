@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import logo from "../assets/logo.png";
-import { devotionalContent } from "../data/devotionalContent";
+import { useDevotionalContent } from "../context/DevotionalContext";
 
 export function Menu({ currentChapter, currentVerse }) {
+  const devotionalContent = useDevotionalContent();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedChapter, setSelectedChapter] = useState(currentChapter || 1);
 
