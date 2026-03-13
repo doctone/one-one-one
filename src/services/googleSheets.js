@@ -45,6 +45,7 @@ function parseSheetData(rows) {
 
     return {
       id: parseInt(getValue('id'), 10) || index + 1,
+      book: getValue('book') || getValue('Book'),
       chapter: parseInt(getValue('chapter'), 10),
       verse: parseInt(getValue('verse'), 10),
       verseText: getValue('versetext') || getValue('verseText'),
@@ -54,7 +55,7 @@ function parseSheetData(rows) {
       extraQuestion: getValue('extraquestion') || getValue('extraQuestion') || undefined,
       prayer: getValue('prayer'),
     };
-  }).filter(item => item.chapter && item.verse); // Filter out invalid rows
+  }).filter(item => item.book && item.chapter && item.verse); // Filter out invalid rows
 }
 
 // Cache for the fetched data

@@ -3,9 +3,27 @@ import { Link } from "@tanstack/react-router";
 import logo from "../assets/logo.png";
 import { useDevotionalContent } from "../context/DevotionalContext";
 
-export function Menu({ currentChapter, currentVerse }) {
+const normalizeBook = (value) =>
+  String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+
+export function Menu({ currentBook, currentChapter, currentVerse }) {
   const devotionalContent = useDevotionalContent();
+  const books = [
+    ...new Set(
+      devotionalContent.map((d) => d.book).filter(Boolean)
+    ),
+  ];
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(() => {
+    return (
+      books.find((b) => normalizeBook(b) === normalizeBook(currentBook)) ||
+      books[0] ||
+      ""
+    );
+  });
   const [selectedChapter, setSelectedChapter] = useState(currentChapter || 1);
 
   // Prevent scrolling when menu is open
@@ -24,11 +42,38 @@ export function Menu({ currentChapter, currentVerse }) {
     }
   }, [currentChapter]);
 
-  // Get all unique chapters
-  const chapters = [...new Set(devotionalContent.map(d => d.chapter))].sort((a, b) => a - b);
+  // Update selected book when current book changes or books load
+  useEffect(() => {
+    if (!books.length) return;
+    const normalizedCurrent = normalizeBook(currentBook);
+    const match =
+      books.find((b) => normalizeBook(b) === normalizedCurrent) || books[0];
+    if (match && match !== selectedBook) {
+      setSelectedBook(match);
+    }
+  }, [books, currentBook]);
+
+  const bookContent = devotionalContent.filter(
+    (d) => normalizeBook(d.book) === normalizeBook(selectedBook)
+  );
+
+  // Get all unique chapters for selected book
+  const chapters = [...new Set(bookContent.map((d) => d.chapter))].sort(
+    (a, b) => a - b
+  );
 
   // Get verses for the selected chapter
-  const versesInChapter = devotionalContent.filter(d => d.chapter === selectedChapter);
+  const versesInChapter = bookContent.filter(
+    (d) => d.chapter === selectedChapter
+  );
+
+  // Reset chapter if selected book changes
+  useEffect(() => {
+    if (!chapters.length) return;
+    if (!chapters.includes(selectedChapter)) {
+      setSelectedChapter(chapters[0]);
+    }
+  }, [chapters, selectedChapter]);
 
   return (
     <>
@@ -93,6 +138,51 @@ export function Menu({ currentChapter, currentVerse }) {
 
           <div className="mb-6">
             <h3 className="font-sans text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+              Book
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {books.map((book) => {
+                const firstForBook = devotionalContent.find(
+                  (d) => normalizeBook(d.book) === normalizeBook(book)
+                );
+                const isActive = normalizeBook(currentBook) === normalizeBook(book);
+
+                if (!firstForBook) {
+                  return (
+                    <button
+                      key={book}
+                      onClick={() => setSelectedBook(book)}
+                      className="px-3 py-2 rounded-xl font-serif text-sm bg-gray-50 text-gray-600"
+                    >
+                      {book}
+                    </button>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={book}
+                    to="/bible/$book/$chapterId/$verseId"
+                    params={{
+                      book: firstForBook.book,
+                      chapterId: firstForBook.chapter,
+                      verseId: firstForBook.verse,
+                    }}
+                    onClick={() => setSelectedBook(book)}
+                    className={`px-3 py-2 rounded-xl font-serif text-sm transition-all duration-200 ${isActive
+                      ? "bg-sage-500 text-white shadow-md scale-[1.02]"
+                      : "bg-gray-50 text-gray-600 hover:bg-sage-100 hover:text-sage-700"
+                      }`}
+                  >
+                    {book}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="font-sans text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
               Chapter
             </h3>
             <div className="grid grid-cols-4 gap-2">
@@ -123,8 +213,9 @@ export function Menu({ currentChapter, currentVerse }) {
                   return (
                     <Link
                       key={devotional.id}
-                      to="/mark/$chapterId/$verseId"
+                      to="/bible/$book/$chapterId/$verseId"
                       params={{
+                        book: devotional.book,
                         chapterId: devotional.chapter,
                         verseId: devotional.verse,
                       }}

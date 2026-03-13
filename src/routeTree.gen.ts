@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MarkChapterIdVerseIdRouteImport } from './routes/mark.$chapterId.$verseId'
+import { Route as BibleBookChapterIdVerseIdRouteImport } from './routes/bible.$book.$chapterId.$verseId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,48 @@ const MarkChapterIdVerseIdRoute = MarkChapterIdVerseIdRouteImport.update({
   path: '/mark/$chapterId/$verseId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BibleBookChapterIdVerseIdRoute =
+  BibleBookChapterIdVerseIdRouteImport.update({
+    id: '/bible/$book/$chapterId/$verseId',
+    path: '/bible/$book/$chapterId/$verseId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/mark/$chapterId/$verseId': typeof MarkChapterIdVerseIdRoute
+  '/bible/$book/$chapterId/$verseId': typeof BibleBookChapterIdVerseIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/mark/$chapterId/$verseId': typeof MarkChapterIdVerseIdRoute
+  '/bible/$book/$chapterId/$verseId': typeof BibleBookChapterIdVerseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/mark/$chapterId/$verseId': typeof MarkChapterIdVerseIdRoute
+  '/bible/$book/$chapterId/$verseId': typeof BibleBookChapterIdVerseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/mark/$chapterId/$verseId'
+  fullPaths:
+    | '/'
+    | '/mark/$chapterId/$verseId'
+    | '/bible/$book/$chapterId/$verseId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/mark/$chapterId/$verseId'
-  id: '__root__' | '/' | '/mark/$chapterId/$verseId'
+  to: '/' | '/mark/$chapterId/$verseId' | '/bible/$book/$chapterId/$verseId'
+  id:
+    | '__root__'
+    | '/'
+    | '/mark/$chapterId/$verseId'
+    | '/bible/$book/$chapterId/$verseId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MarkChapterIdVerseIdRoute: typeof MarkChapterIdVerseIdRoute
+  BibleBookChapterIdVerseIdRoute: typeof BibleBookChapterIdVerseIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +83,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarkChapterIdVerseIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bible/$book/$chapterId/$verseId': {
+      id: '/bible/$book/$chapterId/$verseId'
+      path: '/bible/$book/$chapterId/$verseId'
+      fullPath: '/bible/$book/$chapterId/$verseId'
+      preLoaderRoute: typeof BibleBookChapterIdVerseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MarkChapterIdVerseIdRoute: MarkChapterIdVerseIdRoute,
+  BibleBookChapterIdVerseIdRoute: BibleBookChapterIdVerseIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

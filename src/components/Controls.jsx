@@ -1,11 +1,15 @@
 import { Link } from '@tanstack/react-router'
 
-export function Controls({ nextChapterId, nextVerseId }) {
+export function Controls({ nextBook, nextChapterId, nextVerseId }) {
     return (
         <div className="p-6 flex justify-center pb-12">
             <Link
-                to="/mark/$chapterId/$verseId"
-                params={{ chapterId: nextChapterId, verseId: nextVerseId }}
+                to="/bible/$book/$chapterId/$verseId"
+                params={{
+                    book: nextBook,
+                    chapterId: nextChapterId,
+                    verseId: nextVerseId,
+                }}
                 className="group relative px-8 py-4 bg-gray-800 text-white font-sans text-lg font-medium rounded-full 
                    shadow-lg hover:bg-gray-700 hover:shadow-xl hover:-translate-y-0.5 
                    active:translate-y-0 active:shadow-md transition-all duration-300

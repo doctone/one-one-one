@@ -7,7 +7,7 @@ import { WeeklyProgress } from './WeeklyProgress'
 import { useWeeklyProgress } from '../hooks/useWeeklyProgress'
 import logo from '../assets/logo.jpg'
 
-export function Layout({ data, nextChapterId, nextVerseId }) {
+export function Layout({ data, nextBook, nextChapterId, nextVerseId }) {
     const { completed, markToday } = useWeeklyProgress();
 
     // Mark today as complete when viewing a devotional
@@ -42,7 +42,11 @@ export function Layout({ data, nextChapterId, nextVerseId }) {
                 <PrayerSection prayer={data.prayer} />
             </div>
 
-            <Controls nextChapterId={nextChapterId} nextVerseId={nextVerseId} />
+            <Controls
+                nextBook={nextBook}
+                nextChapterId={nextChapterId}
+                nextVerseId={nextVerseId}
+            />
         </main>
     )
 }
