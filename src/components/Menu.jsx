@@ -11,20 +11,27 @@ const normalizeBook = (value) =>
 
 export function Menu({ currentBook, currentChapter, currentVerse }) {
   const devotionalContent = useDevotionalContent();
-  const books = [
-    ...new Set(
-      devotionalContent.map((d) => d.book).filter(Boolean)
-    ),
-  ];
+  const books = devotionalContent.reduce((uniqueBooks, devotional) => {
+    const book = String(devotional.book || "").trim();
+    const normalizedBook = normalizeBook(book);
+
+    if (!book || uniqueBooks.some((entry) => entry.normalized === normalizedBook)) {
+      return uniqueBooks;
+    }
+
+    uniqueBooks.push({ label: book, normalized: normalizedBook });
+    return uniqueBooks;
+  }, []);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedBook, setSelectedBook] = useState(() => {
-    return (
-      books.find((b) => normalizeBook(b) === normalizeBook(currentBook)) ||
-      books[0] ||
-      ""
-    );
+  const [menuSelection, setMenuSelection] = useState({
+    book: null,
+    chapter: null,
   });
-  const [selectedChapter, setSelectedChapter] = useState(currentChapter || 1);
+  const selectedBook =
+    books.find((b) => b.normalized === normalizeBook(menuSelection.book))?.label ||
+    books.find((b) => b.normalized === normalizeBook(currentBook))?.label ||
+    books[0]?.label ||
+    "";
 
   // Prevent scrolling when menu is open
   useEffect(() => {
@@ -35,24 +42,6 @@ export function Menu({ currentBook, currentChapter, currentVerse }) {
     }
   }, [isOpen]);
 
-  // Update selected chapter when current chapter changes
-  useEffect(() => {
-    if (currentChapter) {
-      setSelectedChapter(currentChapter);
-    }
-  }, [currentChapter]);
-
-  // Update selected book when current book changes or books load
-  useEffect(() => {
-    if (!books.length) return;
-    const normalizedCurrent = normalizeBook(currentBook);
-    const match =
-      books.find((b) => normalizeBook(b) === normalizedCurrent) || books[0];
-    if (match && match !== selectedBook) {
-      setSelectedBook(match);
-    }
-  }, [books, currentBook]);
-
   const bookContent = devotionalContent.filter(
     (d) => normalizeBook(d.book) === normalizeBook(selectedBook)
   );
@@ -61,19 +50,15 @@ export function Menu({ currentBook, currentChapter, currentVerse }) {
   const chapters = [...new Set(bookContent.map((d) => d.chapter))].sort(
     (a, b) => a - b
   );
+  const selectedChapter =
+    (chapters.includes(menuSelection.chapter) && menuSelection.chapter) ||
+    (chapters.includes(currentChapter) && currentChapter) ||
+    chapters[0];
 
   // Get verses for the selected chapter
   const versesInChapter = bookContent.filter(
     (d) => d.chapter === selectedChapter
   );
-
-  // Reset chapter if selected book changes
-  useEffect(() => {
-    if (!chapters.length) return;
-    if (!chapters.includes(selectedChapter)) {
-      setSelectedChapter(chapters[0]);
-    }
-  }, [chapters, selectedChapter]);
 
   return (
     <>
@@ -141,40 +126,50 @@ export function Menu({ currentBook, currentChapter, currentVerse }) {
               Book
             </h3>
             <div className="flex flex-wrap gap-2">
-              {books.map((book) => {
+              {books.map(({ label, normalized }) => {
                 const firstForBook = devotionalContent.find(
-                  (d) => normalizeBook(d.book) === normalizeBook(book)
+                  (d) => normalizeBook(d.book) === normalized
                 );
-                const isActive = normalizeBook(currentBook) === normalizeBook(book);
+                const isActive = normalizeBook(currentBook) === normalized;
 
                 if (!firstForBook) {
                   return (
                     <button
-                      key={book}
-                      onClick={() => setSelectedBook(book)}
+                      key={normalized}
+                      onClick={() =>
+                        setMenuSelection({
+                          book: label,
+                          chapter: firstForBook?.chapter ?? null,
+                        })
+                      }
                       className="px-3 py-2 rounded-xl font-serif text-sm bg-gray-50 text-gray-600"
                     >
-                      {book}
+                      {label}
                     </button>
                   );
                 }
 
                 return (
                   <Link
-                    key={book}
+                    key={normalized}
                     to="/bible/$book/$chapterId/$verseId"
                     params={{
                       book: firstForBook.book,
                       chapterId: firstForBook.chapter,
                       verseId: firstForBook.verse,
                     }}
-                    onClick={() => setSelectedBook(book)}
+                    onClick={() =>
+                      setMenuSelection({
+                        book: label,
+                        chapter: firstForBook.chapter,
+                      })
+                    }
                     className={`px-3 py-2 rounded-xl font-serif text-sm transition-all duration-200 ${isActive
                       ? "bg-sage-500 text-white shadow-md scale-[1.02]"
                       : "bg-gray-50 text-gray-600 hover:bg-sage-100 hover:text-sage-700"
                       }`}
                   >
-                    {book}
+                    {label}
                   </Link>
                 );
               })}
@@ -189,7 +184,12 @@ export function Menu({ currentBook, currentChapter, currentVerse }) {
               {chapters.map((chapter) => (
                 <button
                   key={chapter}
-                  onClick={() => setSelectedChapter(chapter)}
+                  onClick={() =>
+                    setMenuSelection((currentSelection) => ({
+                      ...currentSelection,
+                      chapter,
+                    }))
+                  }
                   className={`aspect-square rounded-xl flex items-center justify-center font-serif text-lg transition-all duration-200 ${selectedChapter === chapter
                     ? "bg-sage-500 text-white shadow-md scale-105"
                     : "bg-gray-50 text-gray-600 hover:bg-sage-100 hover:text-sage-700"
