@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
+import { getBibleUrl } from '../utils/getBibleUrl'
 
-export function VerseSection({ text, reference, extra }) {
+export function VerseSection({ book, chapter, verse, text, reference, extra }) {
     const [isFlipped, setIsFlipped] = useState(false)
 
     useEffect(() => {
@@ -26,9 +27,15 @@ export function VerseSection({ text, reference, extra }) {
                         <p className="font-serif text-3xl md:text-4xl text-gray-800 leading-snug mb-6">
                             “{text}”
                         </p>
-                        <p className="font-sans text-sage-500 font-medium tracking-wide">
+                        <a
+                            href={getBibleUrl(book, chapter, verse)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-sans text-sage-500 font-medium tracking-wide hover:text-sage-700 hover:underline transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                        >
                             {reference}
-                        </p>
+                        </a>
                         {extra && (
                             <div className="mt-4 text-xs text-sage-400 font-medium uppercase tracking-widest animate-pulse">
                                 Tap for more

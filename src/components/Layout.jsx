@@ -31,6 +31,9 @@ export function Layout({ data, nextBook, nextChapterId, nextVerseId }) {
 
             <div className="flex-grow flex flex-col gap-2 pb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
                 <VerseSection
+                    book={data.book}
+                    chapter={data.chapter}
+                    verse={data.verse}
                     text={data.verseText}
                     reference={data.verseRef}
                     extra={data.extraVerse}
