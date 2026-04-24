@@ -1,8 +1,10 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
+import { useEffect } from 'react'
 import { Layout } from '../components/Layout'
 import { Menu } from '../components/Menu'
 import { getDevotionalContent } from '../services/googleSheets'
 import { DevotionalContext } from '../context/DevotionalContext'
+import { setLastViewedPage } from '../utils/lastViewedPage'
 
 const normalizeBook = (value) => {
     return String(value || '')
@@ -57,6 +59,16 @@ export const Route = createFileRoute('/bible/$book/$chapterId/$verseId')({
 function ChapterVerseComponent() {
     const { chapterData, chapterId, verseId, devotionalContent, nextContent } =
         Route.useLoaderData()
+
+    useEffect(() => {
+        if (!chapterData) {
+            return
+        }
+
+        setLastViewedPage(
+            `/bible/${encodeURIComponent(chapterData.book)}/${chapterId}/${verseId}`,
+        )
+    }, [chapterData, chapterId, verseId])
 
     if (!chapterData) {
         return null
